@@ -1,7 +1,6 @@
 function createClient () {}
 
-
-/*exports sintaxis node*/
+/* exports sintaxis node*/
 module.exports = {
-	createClient: createClient
+  createClient: createClient
 }
