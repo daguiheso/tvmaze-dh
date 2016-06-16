@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "standard",
+    "coverage": "istanbul cover node_modules/tape/bin/tape -- test/*-test.js",
     "test": "npm run lint & tape test/*-test.js | tap-spec"
   },
   "keywords": [
@@ -15,6 +16,7 @@
   "author": "Daniel Hernández",
   "license": "MIT",
   "devDependencies": {
+    "istanbul": "^0.4.3",
     "nock": "^8.0.0",
     "standard": "^7.1.2",
     "tap-spec": "^4.1.1",
