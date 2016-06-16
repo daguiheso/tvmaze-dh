@@ -19,7 +19,6 @@ var endpoint = 'http://api.tvmaze.test' /* url de prueba solo para test*/
   las aserciones son las diferentes funciones que me van a poder permitir a mi realizar las pruebas
   sobre mi codigo, por ejemplo la existencia de una funcion, si algo es igual a algo que espero que
   sea igual, que error ocurrio o no, si la funcion lanzo un error o no
-
 */
 test('should create a client', function (t) {
   /* primer prueba - la function createClient deberia existir, si no es null o undefined pasa*/
@@ -49,6 +48,24 @@ test('should list shows', function (t) {
     t.error(err, 'should be not an error')
     /* que el resultado sea un arreglo*/
     t.ok(Array.isArray(shows), 'should be an array')
+    t.end()
+  })
+})
+
+test('should search shows', function (t) {
+  var client = tvmaze.createClient({endpoint: endpoint})
+
+  t.equals(typeof client.search, 'function', 'should be a function')
+
+  nock(endpoint)
+    .get('/search/shows')
+    .query({q: 'walking'})
+    .reply(200, [{name: 'walking'}])
+
+  client.search('walking', function (err, shows) {
+    t.error(err, 'should be not an error')
+    t.ok(Array.isArray(shows), 'should be an array')
+    t.equals(shows[0].name, 'walking', 'should retrieve a show name')
     t.end()
   })
 })
