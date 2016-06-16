@@ -4,8 +4,15 @@
 */
 
 var test = require('tape')
+var nock = require('nock')  // simulador de http request
 var tvmaze = require('../')
 var Client = require('../lib/client')
+
+/*
+  lo que hace nock es que intercepta los llamados que hace node internamente utilizando http
+  request y en vez de hacer la peticion real la hace al servidor ficticio que estoy creando
+*/
+var endpoint = 'http://api.tvmaze.test'
 
 /*
   function test recibe un callback donde tenemos el onjeto llamado t que contiene las aserciones,
@@ -29,8 +36,18 @@ test('should create a client', function (t) {
 })
 
 test('should list shows', function (t) {
-  var client = tvmaze.createClient()
-
+  var client = tvmaze.createClient({endpoint: endpoint}) /* le paso un objeto de configuracion para que haga peticiones a endpoint creado ficticio*/
   t.equals(typeof client.shows, 'function', 'should be a function')
-  t.end()
+
+  /* simulando request con nock para test*/
+  nock(endpoint)
+    .get('/shows')
+    .reply(200, []) /* responde  con un estado 200 y un arreglo vacio*/
+
+  /* llamado a shows que me retorna o un error o la lista de shows*/
+  client.shows(function (err, shows) {
+    t.error(err, 'should be not an error')
+    t.ok(Array.isArray(shows), 'should be an array')
+    t.end()
+  })
 })
