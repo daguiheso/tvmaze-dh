@@ -34,6 +34,40 @@ test('should create a client', function (t) {
   t.end()
 })
 
+/* prueba para que peticion falle con un endpoint descono*/
+test('should fail with onknown endpoint', function (t) {
+  var client = tvmaze.createClient({endpoint: endpoint})
+
+  nock(endpoint)
+    .get('/foo')
+    .reply(404)
+
+  client._request('/foo', 'GET', null, function (err, body) {
+    t.ok(err, 'should faild')
+    t.end()
+  })
+})
+
+/* deberia fallar si no hay un query de busqueda */
+test('should fail if not query is passed', function (t) {
+  var client = tvmaze.createClient({endpoint: endpoint})
+
+  nock(endpoint)
+    .get('/search/shows')
+    .reply(400, {
+      code: 0,
+      message: 'Missing required parameter: q',
+      name: 'Bad request error',
+      status: 400
+    })
+
+  client._request('/search/shows', 'GET', null, function (err, res) { /* aqui no recibo ningun body porque esa rama solomaente devuelve un error*/
+    t.ok(err, 'bad request error')
+    t.error(res, 'should be null')
+    t.end()
+  })
+})
+
 test('should list shows', function (t) {
   var client = tvmaze.createClient({endpoint: endpoint}) /* le paso un objeto de configuracion para que haga peticiones a endpoint creado ficticio*/
   t.equals(typeof client.shows, 'function', 'should be a function')
