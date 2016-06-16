@@ -27,3 +27,10 @@ test('should create a client', function (t) {
   /* terminar prueba - por naturaleza de node asyncrona hay que terminarla*/
   t.end()
 })
+
+test('should list shows', function (t) {
+  var client = tvmaze.createClient()
+
+  t.equals(typeof client.shows, 'function', 'should be a function')
+  t.end()
+})
