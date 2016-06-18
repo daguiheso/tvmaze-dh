@@ -103,3 +103,21 @@ test('should search shows', function (t) {
     t.end()
   })
 })
+
+test('should search show by id', function (t) {
+  var client = tvmaze.createClient({endpoint: endpoint})
+  t.equals(typeof client.showId, 'function', 'should be a function')
+
+  nock(endpoint)
+    .get('/shows/123')
+    .query(1)
+    .reply(200, {id: 123, name: 'walking'})
+
+  client.showId(123, function (err, show) {
+    t.error(err, 'should be not an error')
+    t.ok(show, 'should exist')
+    t.equals(show.id, 123)
+    t.equals(show.name, 'walking')
+    t.end()
+  })
+})
