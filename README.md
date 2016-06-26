@@ -21,6 +21,11 @@ client.shows(function (err, shows) {
 client.search('lost', function (err, shows) {
 	// do something shows...
 })
+
+client.show(2473, function (err, show) {
+  // do something with show 
+})
+
 ```
 
 ## License MIT
